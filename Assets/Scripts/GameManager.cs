@@ -4,9 +4,10 @@ using Completed; // This was missing in tutorial.
 // https://answers.unity.com/questions/1188590/error-cs0246-in-gamemanager-roguelike-2d-tutorial.html
 
 public class GameManager : MonoBehaviour {
-        public static GameManager instance = null;
-		public BoardManager boardScript;
-
+    public static GameManager instance = null;
+    public BoardManager boardScript;
+    public int playerFoodPoints = 100;
+    [HideInInspector] public bool playersTurn = true;
 
 		private int level = 3;
 
@@ -28,6 +29,10 @@ public class GameManager : MonoBehaviour {
 				boardScript.SetupScene(level);
 		}
 
+    public void GameOver()
+    {
+      enabled = false;
+    }
     // Update is called once per frame
     void Update() {
         
