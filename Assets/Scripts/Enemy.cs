@@ -1,11 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
+namespace Completed
+{
     //Enemy inherits from MovingObject, our base class for objects that can move, Player also inherits from this.
     public class Enemy : MovingObject
     {
         //The amount of food points to subtract from the player when attacking.
         public int playerDamage;
+        public AudioClip attackSound1;						//First of two audio clips to play when attacking the player.
+		public AudioClip attackSound2;						//Second of two audio clips to play when attacking the player.
 
         //Variable of type Animator to store a reference to the enemy's Animator component.
         private Animator animator;
@@ -91,5 +95,8 @@ using System.Collections;
             //Set the attack trigger of animator to trigger Enemy attack animation.
             animator.SetTrigger ("enemyAttack");
 
+            //Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
+			SoundManager.instance.RandomizeSfx (attackSound1, attackSound2);
         }
     }
+}

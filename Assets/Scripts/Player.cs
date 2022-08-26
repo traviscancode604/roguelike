@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine.SceneManagement;        //Allows us to use SceneManager
 using UnityEngine.UI;
 
+namespace Completed
+{
     //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
     public class Player : MovingObject
     {
@@ -20,6 +22,13 @@ using UnityEngine.UI;
         private Animator animator;
         //Used to store player food points total during level.
         private int food;
+        public AudioClip moveSound1;				//1 of 2 Audio clips to play when player moves.
+		public AudioClip moveSound2;				//2 of 2 Audio clips to play when player moves.
+		public AudioClip eatSound1;					//1 of 2 Audio clips to play when player collects a food object.
+		public AudioClip eatSound2;					//2 of 2 Audio clips to play when player collects a food object.
+		public AudioClip drinkSound1;				//1 of 2 Audio clips to play when player collects a soda object.
+		public AudioClip drinkSound2;				//2 of 2 Audio clips to play when player collects a soda object.
+		public AudioClip gameOverSound;				//Audio clip to play when player dies.
 
         
         //Start overrides the Start function of MovingObject
@@ -94,6 +103,7 @@ using UnityEngine.UI;
             if (Move (xDir, yDir, out hit)) 
             {
                 //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
+                SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
             }
 
             //Since the player has moved and lost food points, check if the game has ended.
@@ -139,6 +149,9 @@ using UnityEngine.UI;
                 food += pointsPerFood;
                 foodText.text = "+" + pointsPerFood + " Food: " + food;
 
+                //Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
+				SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
+
                 //Disable the food object the player collided with.
                 other.gameObject.SetActive (false);
             }
@@ -149,6 +162,9 @@ using UnityEngine.UI;
                 //Add pointsPerSoda to players food points total
                 food += pointsPerSoda;
                 foodText.text = "+" + pointsPerSoda + " Food: " + food;
+
+                //Call the RandomizeSfx function of SoundManager and pass in two drinking sounds to choose between to play the drinking sound effect.
+				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
 
 
                 //Disable the soda object the player collided with.
@@ -182,10 +198,15 @@ using UnityEngine.UI;
             //Check if food point total is less than or equal to zero.
             if (food <= 0) 
             {
+                //Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
+                SoundManager.instance.PlaySingle (gameOverSound);
+                
+                //Stop the background music.
+                SoundManager.instance.musicSource.Stop();
 
                 //Call the GameOver function of GameManager.
                 GameManager.instance.GameOver ();
             }
         }
     }
-    
+}
